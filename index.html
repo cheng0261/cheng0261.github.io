@@ -51,6 +51,9 @@
     .page {
       display: none;
       min-height: 100vh;
+      min-height: 100dvh;
+      height: auto;
+      overflow: visible;
     }
 
     .page.active {
@@ -67,6 +70,7 @@
     #page-home {
       background: var(--bg-gradient);
       padding: 48px 20px 72px;
+      overflow: visible;
     }
 
     .home-header {
@@ -423,6 +427,9 @@
       text-align: left;
       font-family: inherit;
       border-left: 3px solid transparent;
+      line-height: 1.4;
+      white-space: normal;
+      word-break: keep-all;
     }
 
     .sidebar-item:hover {
@@ -469,6 +476,10 @@
       background: var(--sand-dark);
     }
 
+    .sidebar-nav-scroll {
+      display: contents;
+    }
+
     .plan-section { scroll-margin-top: 28px; }
 
     .card {
@@ -490,6 +501,12 @@
       align-items: center;
       gap: 10px;
       letter-spacing: 0.02em;
+      line-height: 1.5;
+      min-height: 47px;
+      height: auto;
+      flex-wrap: wrap;
+      word-break: keep-all;
+      overflow: visible;
     }
 
     .card-header i { opacity: 0.9; font-size: 15px; }
@@ -899,36 +916,140 @@
       .days-badge {
         width: auto;
         min-width: 62px;
+        height: 47px;
       }
 
       .pref-row { grid-template-columns: 1fr; }
-      .plan-layout { grid-template-columns: 1fr; }
+      .plan-layout { grid-template-columns: 1fr; gap: 16px; }
       .plan-grid,
       .attraction-grid,
       .budget-grid { grid-template-columns: 1fr; }
       .weather-grid { grid-template-columns: repeat(2, 1fr); }
-      .sidebar { position: static; }
+      .sidebar { position: static; height: auto; overflow: visible; }
       .hotel-body { grid-template-columns: 1fr; }
 
-      #page-home { padding: 36px 16px 56px; }
-      #page-plan,
-      #page-daily {
-        padding: 20px 16px calc(40px + env(safe-area-inset-bottom, 0px));
+      #planSidebar,
+      #page-daily .plan-layout > .sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        height: auto;
+        overflow: visible;
       }
 
-      .form-card { padding: 28px 24px; }
+      .sidebar-nav-scroll,
+      #page-daily .plan-layout > .sidebar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        overflow: visible;
+        mask-image: none;
+        -webkit-mask-image: none;
+      }
+
+      #planSidebar .sidebar-nav-scroll .sidebar-item,
+      #page-daily .plan-layout > .sidebar .sidebar-item {
+        width: auto;
+        flex: 0 0 auto;
+        border-left: none;
+        border-radius: 999px;
+        padding: 8px 14px;
+        white-space: nowrap;
+      }
+
+      #planSidebar .sidebar-item.active,
+      #page-daily .plan-layout > .sidebar .sidebar-item.active {
+        border-left: none;
+        background: var(--sand-dark);
+        color: var(--purple-dark);
+        font-weight: 600;
+      }
+
+      #planSidebar .sidebar-sub {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding-left: 0;
+        overflow: visible;
+      }
+
+      #planSidebar .sidebar-sub span {
+        flex: 0 0 auto;
+        white-space: nowrap;
+      }
+
+      .main-content,
+      .plan-grid {
+        overflow: visible;
+        min-width: 0;
+      }
+
+      .card {
+        overflow: visible;
+      }
+
+      .card-body,
+      .map-container,
+      .attraction-img,
+      .attraction-card,
+      .hotel-card,
+      .dining-table {
+        overflow: hidden;
+        border-radius: inherit;
+      }
+
+      .card-header {
+        border-radius: var(--radius) var(--radius) 0 0;
+      }
+
+      .card:not(:has(.card-body)) .card-header,
+      .card-body:last-child {
+        border-radius: var(--radius);
+      }
+
+      #page-home {
+        padding: 32px 16px calc(48px + env(safe-area-inset-bottom, 0px));
+      }
+
+      #page-plan,
+      #page-daily {
+        padding: 16px 16px calc(32px + env(safe-area-inset-bottom, 0px));
+      }
+
+      .form-card { padding: 24px 20px; }
       .card-body { padding: 18px; }
+      .card { margin-bottom: 16px; }
     }
 
     @media (max-width: 768px) {
+      :root {
+        --mobile-sticky-top: calc(env(safe-area-inset-top, 0px) + 52px);
+      }
+
       .plan-topbar {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 12px;
-        margin-bottom: 16px;
+        position: sticky;
+        top: env(safe-area-inset-top, 0px);
+        z-index: 40;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+        padding: 10px 0 12px;
+        background: rgba(240, 237, 232, 0.92);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+
+      .btn-back {
+        flex: 1;
+        min-width: 0;
+        min-height: 44px;
+        justify-content: center;
       }
 
       .topbar-actions {
+        flex: 1 0 100%;
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 8px;
@@ -936,7 +1057,8 @@
 
       .topbar-actions .btn-outline {
         justify-content: center;
-        padding: 10px 12px;
+        min-height: 44px;
+        padding: 10px 8px;
         font-size: 13px;
       }
 
@@ -947,27 +1069,48 @@
       #planSidebar,
       #page-daily .plan-layout > .sidebar {
         display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 8px;
+        flex-direction: column;
+        gap: 10px;
         position: sticky;
-        top: 0;
-        z-index: 20;
-        padding: 10px 12px;
-        margin: 0 -4px 12px;
+        top: var(--mobile-sticky-top);
+        z-index: 30;
+        padding: 10px 0 12px;
+        margin: 0 -16px 8px;
+        padding-left: 16px;
+        padding-right: 16px;
+        background: rgba(240, 237, 232, 0.95);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: none;
+        border-bottom: 1px solid var(--border);
+        border-radius: 0;
+        box-shadow: none;
+        height: auto;
         overflow: visible;
-        box-shadow: var(--shadow);
       }
 
-      #planSidebar .sidebar-item,
+      .sidebar-nav-scroll,
+      #page-daily .plan-layout > .sidebar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        overflow: visible;
+        mask-image: none;
+        -webkit-mask-image: none;
+        overscroll-behavior: auto;
+        scroll-snap-type: none;
+      }
+
+      #planSidebar .sidebar-nav-scroll .sidebar-item,
       #page-daily .plan-layout > .sidebar .sidebar-item {
         flex: 0 0 auto;
         width: auto;
         border-left: none;
         border-radius: 999px;
-        padding: 8px 14px;
+        padding: 10px 14px;
         font-size: 13px;
         white-space: nowrap;
+        min-height: 40px;
       }
 
       #planSidebar .sidebar-item.active,
@@ -982,19 +1125,12 @@
       }
 
       #planSidebar .sidebar-sub {
-        flex: 1 0 100%;
         display: flex;
-        flex-wrap: nowrap;
+        flex-wrap: wrap;
         gap: 8px;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        padding: 2px 0 4px;
+        padding: 0;
         margin: 0;
-        scrollbar-width: none;
-      }
-
-      #planSidebar .sidebar-sub::-webkit-scrollbar {
-        display: none;
+        overflow: visible;
       }
 
       #planSidebar .sidebar-sub span {
@@ -1002,16 +1138,29 @@
         white-space: nowrap;
         border: 1px solid var(--border);
         border-radius: 999px;
-        padding: 6px 12px;
+        padding: 8px 12px;
         font-size: 12px;
+        min-height: 36px;
+        display: inline-flex;
+        align-items: center;
       }
 
       #planSidebar .sidebar-sub span.active {
         border-color: var(--purple);
         border-left-color: var(--purple);
+        background: var(--sand-dark);
       }
 
-      .plan-section { scroll-margin-top: 12px; }
+      .plan-section { scroll-margin-top: calc(var(--mobile-sticky-top) + 140px); }
+
+      .input-wrap,
+      .btn-generate {
+        min-height: 48px;
+      }
+
+      .days-badge {
+        min-height: 48px;
+      }
 
       .budget-total {
         flex-direction: column;
@@ -1019,12 +1168,18 @@
         gap: 6px;
       }
 
-      .map-container { height: 240px; }
-      .map-container .img-placeholder { min-height: 240px; }
+      .map-container { height: 220px; }
+      .map-container .img-placeholder { min-height: 220px; }
 
       .accordion-header {
         padding: 14px 16px;
         font-size: 14px;
+        min-height: 48px;
+      }
+
+      .accordion-header .left {
+        flex-wrap: wrap;
+        gap: 6px;
       }
 
       .accordion-header .date { font-size: 12px; }
@@ -1038,19 +1193,39 @@
         border-bottom: 1px solid var(--border);
       }
 
+      .info-row {
+        flex-wrap: wrap;
+        gap: 4px 12px;
+      }
+
       .info-row .label {
         min-width: 56px;
         flex-shrink: 0;
       }
+
+      .attraction-card .card-top {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .action-btn {
+        min-width: 36px;
+        min-height: 36px;
+      }
     }
 
     @media (max-width: 600px) {
+      :root {
+        --mobile-sticky-top: calc(env(safe-area-inset-top, 0px) + 108px);
+      }
+
       .form-row {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
       }
 
       .form-row .form-group:first-child {
-        grid-column: auto;
+        grid-column: 1 / -1;
       }
 
       .days-badge-group {
@@ -1061,83 +1236,123 @@
         width: 100%;
       }
 
-      .home-header h1 { font-size: 28px; }
+      .home-header h1 { font-size: 26px; }
       .home-header .logo {
-        width: 56px;
-        height: 56px;
-        font-size: 22px;
+        width: 52px;
+        height: 52px;
+        font-size: 20px;
       }
 
-      .form-card { padding: 20px 16px; }
+      .home-header p {
+        font-size: 13px;
+        padding: 0 8px;
+      }
+
+      #page-home {
+        padding-top: 24px;
+      }
+
+      .form-card { padding: 18px 14px; }
       .form-section {
-        margin-bottom: 24px;
-        padding-bottom: 24px;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
       }
 
       .section-title {
-        font-size: 16px;
-        margin-bottom: 16px;
+        font-size: 15px;
+        margin-bottom: 14px;
       }
 
-      .checkbox-group { gap: 8px; }
+      .checkbox-group {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
 
       .checkbox-item {
         font-size: 12px;
-        padding: 6px 10px;
+        padding: 10px 8px;
+        min-height: 44px;
+        justify-content: center;
       }
 
       .weather-grid { grid-template-columns: 1fr; }
+
+      .plan-topbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .btn-back {
+        width: 100%;
+      }
 
       .topbar-actions {
         grid-template-columns: 1fr;
       }
 
-      .btn-back {
-        width: 100%;
-        justify-content: center;
-      }
-
-      #planSidebar .sidebar-item,
+      #planSidebar .sidebar-nav-scroll .sidebar-item,
       #page-daily .plan-layout > .sidebar .sidebar-item {
         padding: 8px 12px;
         font-size: 12px;
       }
 
       .card-header {
-        padding: 12px 16px;
+        padding: 12px 14px;
         font-size: 14px;
       }
 
-      .card-body { padding: 16px; }
+      .card-body { padding: 14px; }
 
-      .attraction-info { padding: 14px; }
+      .attraction-info { padding: 12px; }
 
       .day-summary {
-        padding: 16px;
-        margin-bottom: 20px;
+        padding: 14px;
+        margin-bottom: 16px;
       }
 
       .sub-section-title {
         font-size: 14px;
-        margin-bottom: 14px;
+        margin-bottom: 12px;
+      }
+
+      .btn-generate {
+        margin-top: 24px;
+        padding: 16px;
+        font-size: 16px;
       }
 
       .save-toast {
-        top: 12px;
+        top: calc(12px + env(safe-area-inset-top, 0px));
         left: 16px;
         right: 16px;
         transform: none;
         text-align: center;
       }
+
+      .budget-item .amount {
+        font-size: 20px;
+      }
     }
 
     @media (max-width: 380px) {
-      .home-header h1 { font-size: 24px; }
-      .home-header p { font-size: 13px; }
+      :root {
+        --mobile-sticky-top: calc(env(safe-area-inset-top, 0px) + 120px);
+      }
+
+      .home-header h1 { font-size: 22px; }
+
+      .checkbox-group {
+        grid-template-columns: 1fr;
+      }
 
       #planSidebar .sidebar-sub span {
         font-size: 11px;
-        padding: 5px 10px;
+        padding: 6px 10px;
+      }
+
+      .topbar-actions .btn-outline {
+        font-size: 12px;
       }
     }
   </style>
@@ -1264,7 +1479,7 @@
         <button class="btn-outline" onclick="showPage('daily', 1, { edit: true })">
           <i class="fas fa-pen"></i> 编辑行程
         </button>
-        <button class="btn-outline">
+        <button class="btn-outline btn-export">
           <i class="fas fa-download"></i> 导出行程 <i class="fas fa-chevron-down" style="font-size:10px;margin-left:4px;"></i>
         </button>
       </div>
@@ -1272,27 +1487,29 @@
 
     <div class="plan-layout">
       <nav class="sidebar" id="planSidebar">
-        <button type="button" class="sidebar-item active" data-nav="overview" onclick="navigateToSection('overview')">
-          <i class="fas fa-clipboard-list"></i> 行程概览
-        </button>
-        <button type="button" class="sidebar-item" data-nav="budget" onclick="navigateToSection('budget')">
-          <i class="fas fa-coins"></i> 预算明细
-        </button>
-        <button type="button" class="sidebar-item" data-nav="map" onclick="navigateToSection('map')">
-          <i class="fas fa-map-marker-alt"></i> 景点地图
-        </button>
-        <button type="button" class="sidebar-item" data-nav="daily" onclick="navigateToSection('daily')">
-          <i class="fas fa-calendar-alt"></i> 每日行程
-          <i class="fas fa-chevron-down arrow" id="dayMenuArrow"></i>
-        </button>
+        <div class="sidebar-nav-scroll">
+          <button type="button" class="sidebar-item active" data-nav="overview" onclick="navigateToSection('overview')">
+            <i class="fas fa-clipboard-list"></i> 行程概览
+          </button>
+          <button type="button" class="sidebar-item" data-nav="budget" onclick="navigateToSection('budget')">
+            <i class="fas fa-coins"></i> 预算明细
+          </button>
+          <button type="button" class="sidebar-item" data-nav="map" onclick="navigateToSection('map')">
+            <i class="fas fa-map-marker-alt"></i> 景点地图
+          </button>
+          <button type="button" class="sidebar-item" data-nav="daily" onclick="navigateToSection('daily')">
+            <i class="fas fa-calendar-alt"></i> 每日行程
+            <i class="fas fa-chevron-down arrow" id="dayMenuArrow"></i>
+          </button>
+          <button type="button" class="sidebar-item" data-nav="weather" onclick="navigateToSection('weather')">
+            <i class="fas fa-sun"></i> 天气信息
+          </button>
+        </div>
         <div class="sidebar-sub" id="daySubMenu">
           <span data-nav="day-1" onclick="navigateToSection('daily', 1)">第1天 · 2025-11-03</span>
           <span data-nav="day-2" onclick="navigateToSection('daily', 2)">第2天 · 2025-11-04</span>
           <span data-nav="day-3" onclick="navigateToSection('daily', 3)">第3天 · 2025-11-05</span>
         </div>
-        <button type="button" class="sidebar-item" data-nav="weather" onclick="navigateToSection('weather')">
-          <i class="fas fa-sun"></i> 天气信息
-        </button>
       </nav>
 
       <div class="main-content">
